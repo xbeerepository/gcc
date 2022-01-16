@@ -1,0 +1,45 @@
+schema-version: 1.0
+
+description: |
+  The GCC package contains the GNU compiler collection, which includes the C and C++ compilers.
+  Installed programs: c++, cc (link to gcc), cpp, g++, gcc, gcc-ar, gcc-nm, gcc-ranlib, gcov, gcov-dump, and gcov-tool
+  Installed libraries: libasan.{a,so}, libatomic.{a,so}, libcc1.so, libgcc.a, libgcc_eh.a, libgcc_s.so, libgcov.a, libgomp.{a,so}, libitm.{a,so}, liblsan.{a,so}, liblto_plugin.so, libquadmath.{a,so}, libssp.{a,so}, libssp_nonshared.a, libstdc++.{a,so}, libstdc++fs.a, libsupc++.a, libtsan.{a,so}, and libubsan.{a,so}
+  Installed directories: /usr/include/c++, /usr/lib/gcc, /usr/libexec/gcc, and /usr/share/gcc-11.2.0
+  Short Descriptions
+    c++: The C++ compiler
+    cc: The C compiler
+    cpp: The C preprocessor; it is used by the compiler to expand the #include, #define, and similar statements in the source files
+    g++: The C++ compiler
+    gcc: The C compiler
+    gcc-ar: A wrapper around ar that adds a plugin to the command line. This program is only used to add "link time optimization" and is not useful with the default build options
+    gcc-nm: A wrapper around nm that adds a plugin to the command line. This program is only used to add "link time optimization" and is not useful with the default build options
+    gcc-ranlib: A wrapper around ranlib that adds a plugin to the command line. This program is only used to add "link time optimization" and is not useful with the default build options
+    gcov: A coverage testing tool; it is used to analyze programs to determine where optimizations will have the most effect
+    gcov-dump: Offline gcda and gcno profile dump tool
+    gcov-tool: Offline gcda profile processing tool
+    libasan: The Address Sanitizer runtime library
+    libatomic: GCC atomic built-in runtime library
+    libcc1: The C preprocessing library
+    libgcc: Contains run-time support for gcc
+    libgcov: This library is linked in to a program when GCC is instructed to enable profiling
+    libgomp: GNU implementation of the OpenMP API for multi-platform shared-memory parallel programming in C/C++ and Fortran
+    liblsan: The Leak Sanitizer runtime library
+    liblto_plugin: GCC's Link Time Optimization (LTO) plugin allows GCC to perform optimizations across compilation units
+    libquadmath: GCC Quad Precision Math Library API
+    libssp: Contains routines supporting GCC's stack-smashing protection functionality
+    libstdc++: The standard C++ library
+    libstdc++fs: ISO/IEC TS 18822:2015 Filesystem library
+    libsupc++: Provides supporting routines for the C++ programming language
+    libtsan: The Thread Sanitizer runtime library
+    libubsan: The Undefined Behavior Sanitizer runtime library
+    
+builder: ./gcc-builder
+
+var:
+  version: 11.2.0
+
+provision:
+  - copy:
+      builder: gcc
+      todir: /
+  - shell: ldconfig
