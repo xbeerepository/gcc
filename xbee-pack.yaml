@@ -35,7 +35,7 @@ description: |
     libtsan: The Thread Sanitizer runtime library
     libubsan: The Undefined Behavior Sanitizer runtime library
     
-in:
+var:
   version: 11.2.0
 
 dependencies:
@@ -50,32 +50,32 @@ dependencies:
 
 provision:
   - url:
-      from: https://ftp.gnu.org/gnu/gcc/gcc-{% version %}/gcc-{% version %}.tar.xz
-      todir: "{% xbeeSrc %}"
+      from: https://ftp.gnu.org/gnu/gcc/gcc-{{ .version }}/gcc-{{ .version }}.tar.xz
+      todir: "{{ .xbee.src }}"
   - folder: 
       paths:
-        - "{% xbeeSrc %}/gcc-{% version %}/build"
-        - "{% xbeeOut %}/usr/share/gdb/auto-load/usr/lib"
-        - "{% xbeeOut %}/usr/lib/bfd-plugins"
+        - "{{ .xbee.src }}/gcc-{{ .version }}/build"
+        - "{{ .xbee.out }}/usr/share/gdb/auto-load/usr/lib"
+        - "{{ .xbee.out }}/usr/lib/bfd-plugins"
   - copy:
       resource: gcc.conf
-      todir: "{% xbeeOut %}/etc/ld.so.conf.d"
+      todir: "{{ .xbee.out }}/etc/ld.so.conf.d"
 
 build:
   - shell:
       cmds:
         - sed -e '/static.*SIGSTKSZ/d' -e 's/return kAltStackSize/return SIGSTKSZ * 4/' -i libsanitizer/sanitizer_common/sanitizer_posix_libcdep.cpp
         - sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64
-      directory: "{% xbeeSrc %}/gcc-{% version %}"
+      directory: "{{ .xbee.src }}/gcc-{{ .version }}"
   - shell:
       cmds:
        - ../configure --prefix=/usr LD=ld --enable-languages=c,c++ --disable-multilib --disable-bootstrap --with-system-zlib
        - make -j12
-       - make install DESTDIR={% xbeeOut %}
-       - rm -rf {% xbeeOut %}/usr/lib/gcc/$(gcc -dumpmachine)/{% version %}/include-fixed/bits/
-       - ln -svr {% xbeeOut %}/usr/bin/cpp {% xbeeOut %}/usr/lib
-       - ln -sfv ../../libexec/gcc/$(gcc -dumpmachine)/{% version %}/liblto_plugin.so {% xbeeOut %}/usr/lib/bfd-plugins/
-       - mv -v {% xbeeOut %}/usr/lib/*gdb.py {% xbeeOut %}/usr/share/gdb/auto-load/usr/lib
-      directory: "{% xbeeSrc %}/gcc-{% version %}/build"
+       - make install DESTDIR={{ .xbee.out }}
+       - rm -rf {{ .xbee.out }}/usr/lib/gcc/$(gcc -dumpmachine)/{{ .version }}/include-fixed/bits/
+       - ln -svr {{ .xbee.out }}/usr/bin/cpp {{ .xbee.out }}/usr/lib
+       - ln -sfv ../../libexec/gcc/$(gcc -dumpmachine)/{{ .version }}/liblto_plugin.so {{ .xbee.out }}/usr/lib/bfd-plugins/
+       - mv -v {{ .xbee.out }}/usr/lib/*gdb.py {{ .xbee.out }}/usr/share/gdb/auto-load/usr/lib
+      directory: "{{ .xbee.src }}/gcc-{{ .version }}/build"
 
 
