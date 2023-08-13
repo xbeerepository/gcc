@@ -38,7 +38,7 @@ description: |
 var:
   version: 11.2.0
 
-dependencies:
+builders:
   - gmp
   - mpfr
   - mpc
